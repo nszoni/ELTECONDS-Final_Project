@@ -401,10 +401,10 @@ prog <- prog[3:5,]
 
 ggplot(data=prog, aes(x=reorder(player.name, -progressgoalwards), y=progressgoalwards)) +
   geom_bar(stat="identity") +
-  labs(title = "Forward Progress of BAR Players",
-       subtitle = "Sum of progressive passes and ball carries",
+  labs(title = "Ball Progression of Barcelona Forwards",
+       subtitle = "Cumulative length of progressive passes and ball carries",
        x = element_blank(),
-       y = "Count") +
+       y = "Length (yards)") +
   theme_classic() +
   geom_label(aes(label = progressgoalwards), vjust = 0.5, position = position_dodge(0.9), color = "black", fontface = "bold", size = 4, show.legend = FALSE) +
   theme(legend.position = c(0.8, 0.7))
@@ -701,9 +701,9 @@ xg_timelineplot <- df_clean %>%
         axis.text = element_blank(),
         panel.grid.minor = element_blank(),
         panel.grid.major.y = element_blank()) +
-  geom_text(aes(x=2, label="Kick-off", y=-0.004), colour="black") +
-  geom_text(aes(x=46, label="HT", y=-0.004), colour="black") +
-  geom_text(aes(x=94, label="FT", y=-0.004), colour="black")
+  geom_text(aes(x=4, label="Kick-off", y=-0.004), colour="black") +
+  geom_text(aes(x=48, label="HT", y=-0.004), colour="black") +
+  geom_text(aes(x=92, label="FT", y=-0.004), colour="black")
 
 xg_timelineplot
 
