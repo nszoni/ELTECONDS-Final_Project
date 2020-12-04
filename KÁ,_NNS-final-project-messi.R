@@ -23,10 +23,8 @@ matches <- FreeMatches(FreeCompetitions())
 
 df <- get.matchFree(subset(matches, match_id == 18236))
 
-#wd <- file.path("~", "eltecon-datascience")
-#setwd(wd)
-
-setwd("C:\\ELTECON\\ELTECONDS-Final_Project")
+wd <- file.path("~", "eltecon-datascience")
+setwd(wd)
 
 # EDA ---------------------------------------------------------------------
 
