@@ -3,7 +3,7 @@
 
 ---
 # title: "Final Project"
-# author: "Kov√°cs √Åd√°m J√≥zsef, Nguyen Nam Son"
+# author: "Kov·cs ¡d·m JÛzsef, Nguyen Nam Son"
 # date: "04/12/2020"
 ---
   
@@ -23,10 +23,10 @@ matches <- FreeMatches(FreeCompetitions())
 
 df <- get.matchFree(subset(matches, match_id == 18236))
 
-wd <- file.path("~", "eltecon-datascience")
-setwd(wd)
+#wd <- file.path("~", "eltecon-datascience")
+#setwd(wd)
 
-#setwd("C:\\ELTECON\\eltecon-datascience")
+setwd("C:\\ELTECON\\ELTECONDS-Final_Project")
 
 # EDA ---------------------------------------------------------------------
 
@@ -38,62 +38,61 @@ df <- allclean(df)
 
 df_clean <- df %>% 
   mutate(player.name = case_when(
-    player.name == "Lionel Andr√©s Messi Cuccittini" ~  "Lionel Messi",
+    player.name == "Lionel AndrÈs Messi Cuccittini" ~  "Lionel Messi",
     player.name == "Eric-Sylvain Bilal Abidal" ~ "Eric Abidal",
     player.name == "Sergio Busquets i Burgos" ~ "Sergio Busquets",
     player.name == "Daniel Alves da Silva" ~ "Dani Alves",
-    player.name == "Xavier Hern√°ndez Creus" ~ "Xavi",
-    player.name == "V√≠ctor Vald√©s Arribas" ~ "Victor Valdes",
+    player.name == "Xavier Hern·ndez Creus" ~ "Xavi",
+    player.name == "VÌctor ValdÈs Arribas" ~ "Victor Valdes",
     player.name == "Javier Alejandro Mascherano" ~ "Javier Mascherano",
-    player.name == "David Villa S√°nchez" ~ "David Villa",
-    player.name == "Andr√©s Iniesta Luj√°n" ~ "Andres Iniesta",
-    player.name == "Gerard Piqu√© Bernab√©u" ~ "Gerard Pique",
-    player.name == "Pedro Eliezer Rodr√≠guez Ledesma" ~ "Pedro",
-    player.name == "Seydou K√©ita" ~ "Keita",
+    player.name == "David Villa S·nchez" ~ "David Villa",
+    player.name == "AndrÈs Iniesta Luj·n" ~ "Andres Iniesta",
+    player.name == "Gerard PiquÈ BernabÈu" ~ "Gerard Pique",
+    player.name == "Pedro Eliezer RodrÌguez Ledesma" ~ "Pedro",
+    player.name == "Seydou KÈita" ~ "Keita",
     player.name == "Carles Puyol i Saforcada" ~ "Carles Puyol",
     player.name == "Ji-Sung Park" ~  "Park Ji-Sung",
     player.name == "Patrice Evra" ~ "Patrice Evra",
     player.name == "Edwin van der Sar" ~ "Edwin van der Sar",
     player.name == "Paul Scholes" ~ "Paul Scholes",
-    player.name == "Javier Hern√°ndez Balc√°zar" ~ "Chicharito",
+    player.name == "Javier Hern·ndez Balc·zar" ~ "Chicharito",
     player.name == "Ryan Giggs" ~ "Ryan Giggs",
-    player.name == "Nemanja Vidiƒá" ~ "Nemanja Vidiƒá",
-    player.name == "F√°bio Pereira da Silva" ~ "F√°bio",
+    player.name == "Nemanja VidiÊ" ~ "Nemanja VidiÊ",
+    player.name == "F·bio Pereira da Silva" ~ "F·bio",
     player.name == "Wayne Mark Rooney" ~ "Wayne Rooney",
     player.name == "Luis Antonio Valencia Mosquera" ~ "Valencia",
     player.name == "Michael Carrick" ~ "Michael Carrick",
     player.name == "Rio Ferdinand" ~ "Rio Ferdinand",
-    player.name == "Lu√≠s Carlos Almeida da Cunha" ~ "Nani"))
+    player.name == "LuÌs Carlos Almeida da Cunha" ~ "Nani"))
 
 df_clean <- df_clean %>% 
   mutate(pass.recipient.name = case_when(
-    pass.recipient.name == "Lionel Andr√©s Messi Cuccittini" ~  "Lionel Messi",
+    pass.recipient.name == "Lionel AndrÈs Messi Cuccittini" ~  "Lionel Messi",
     pass.recipient.name == "Eric-Sylvain Bilal Abidal" ~ "Eric Abidal",
     pass.recipient.name == "Sergio Busquets i Burgos" ~ "Sergio Busquets",
     pass.recipient.name == "Daniel Alves da Silva" ~ "Dani Alves",
-    pass.recipient.name == "Xavier Hern√°ndez Creus" ~ "Xavi",
-    pass.recipient.name == "V√≠ctor Vald√©s Arribas" ~ "Victor Valdes",
+    pass.recipient.name == "Xavier Hern·ndez Creus" ~ "Xavi",
+    pass.recipient.name == "VÌctor ValdÈs Arribas" ~ "Victor Valdes",
     pass.recipient.name == "Javier Alejandro Mascherano" ~ "Javier Mascherano",
-    pass.recipient.name == "David Villa S√°nchez" ~ "David Villa",
-    pass.recipient.name == "Andr√©s Iniesta Luj√°n" ~ "Andres Iniesta",
-    pass.recipient.name == "Gerard Piqu√© Bernab√©u" ~ "Gerard Pique",
-    pass.recipient.name == "Pedro Eliezer Rodr√≠guez Ledesma" ~ "Pedro",
-    pass.recipient.name == "Seydou K√©ita" ~ "Keita",
+    pass.recipient.name == "David Villa S·nchez" ~ "David Villa",
+    pass.recipient.name == "AndrÈs Iniesta Luj·n" ~ "Andres Iniesta",
+    pass.recipient.name == "Gerard PiquÈ BernabÈu" ~ "Gerard Pique",
+    pass.recipient.name == "Pedro Eliezer RodrÌguez Ledesma" ~ "Pedro",
+    pass.recipient.name == "Seydou KÈita" ~ "Keita",
     pass.recipient.name == "Carles Puyol i Saforcada" ~ "Carles Puyol",
-    player.name == "Ji-Sung Park" ~  "Park Ji-Sung",
-    player.name == "Patrice Evra" ~ "Patrice Evra",
-    player.name == "Edwin van der Sar" ~ "Edwin van der Sar",
-    player.name == "Paul Scholes" ~ "Paul Scholes",
-    player.name == "Javier Hern√°ndez Balc√°zar" ~ "Chicharito",
-    player.name == "Ryan Giggs" ~ "Ryan Giggs",
-    player.name == "Nemanja Vidiƒá" ~ "Nemanja Vidiƒá",
-    player.name == "F√°bio Pereira da Silva" ~ "F√°bio",
-    player.name == "Wayne Mark Rooney" ~ "Wayne Rooney",
-    player.name == "Luis Antonio Valencia Mosquera" ~ "Valencia",
-    player.name == "Michael Carrick" ~ "Michael Carrick",
-    player.name == "Rio Ferdinand" ~ "Rio Ferdinand",
-    player.name == "Lu√≠s Carlos Almeida da Cunha" ~ "Nani"))
-
+    pass.recipient.name == "Ji-Sung Park" ~  "Park Ji-Sung",
+    pass.recipient.name == "Patrice Evra" ~ "Patrice Evra",
+    pass.recipient.name == "Edwin van der Sar" ~ "Edwin van der Sar",
+    pass.recipient.name == "Paul Scholes" ~ "Paul Scholes",
+    pass.recipient.name == "Javier Hern·ndez Balc·zar" ~ "Chicharito",
+    pass.recipient.name == "Ryan Giggs" ~ "Ryan Giggs",
+    pass.recipient.name == "Nemanja VidiÊ" ~ "Nemanja VidiÊ",
+    pass.recipient.name == "F·bio Pereira da Silva" ~ "F·bio",
+    pass.recipient.name == "Wayne Mark Rooney" ~ "Wayne Rooney",
+    pass.recipient.name == "Luis Antonio Valencia Mosquera" ~ "Valencia",
+    pass.recipient.name == "Michael Carrick" ~ "Michael Carrick",
+    pass.recipient.name == "Rio Ferdinand" ~ "Rio Ferdinand",
+    pass.recipient.name == "LuÌs Carlos Almeida da Cunha" ~ "Nani"))
 #If a shot has no XG value it is because it had 0 chance of earning a goal
 
 df_clean <- df_clean %>% mutate(shot.statsbomb_xg = if_else(is.na(shot.statsbomb_xg), 
@@ -401,10 +400,12 @@ prog <- prog[3:5,]
 
 ggplot(data=prog, aes(x=reorder(player.name, -progressgoalwards), y=progressgoalwards)) +
   geom_bar(stat="identity") +
-  labs(title = "Forward Progress of BAR Players",
-       subtitle = "Sum of progressive passes and ball carries",
+  labs(title = "Ball Progression of Barcelona Forwards",
+       subtitle = "Cumulative length of progressive passes and ball carries",
        x = element_blank(),
-       y = "Count") +
+       y = "Length(yards)",
+       caption =  "made by ¡d·m JÛzsef Kov·cs and Nguyen Nam Son"
+       ) +
   theme_classic() +
   geom_label(aes(label = progressgoalwards), vjust = 0.5, position = position_dodge(0.9), color = "black", fontface = "bold", size = 4, show.legend = FALSE) +
   theme(legend.position = c(0.8, 0.7))
@@ -566,8 +567,11 @@ m <- createPitch(
   geom_label(data = forpassmap2, aes(x = avg_position_x.x, y = avg_position_y.x, label=player.name),hjust=0, vjust=0, size = 3.5) +sc + labs(
     title = "Barcelona pass network", 
     subtitle = 'vs Manchester United',
-    caption = "made by √Åd√°m J√≥zsef Kov√°cs and Nguyen Nam Son"
-  )
+    caption = "made by ¡d·m JÛzsef Kov·cs and Nguyen Nam Son"
+  )+
+  theme(plot.title = element_text(size=32),
+        plot.subtitle = element_text(size=20)) +
+  draw_image(".\\plots\\barca.png",  x = 20, y = 65, scale = 30)
 
 m
 # Radar plot for forward Barca trio ---------------------------------------------
@@ -690,7 +694,7 @@ xg_timelineplot <- df_clean %>%
   scale_y_continuous(limits = c(-0.005, 0.005),
                      expand = c(0, 0)) +
   scale_size(range = c(2, 6)) +
-  labs(caption = "By Kov√°cs √Åd√°m, Nguyen N. Son") +
+  labs(caption =  "made by ¡d·m JÛzsef Kov·cs and Nguyen Nam Son") +
   theme_minimal() +
   theme(legend.position = "none",
         strip.text = element_text(size = 16, 
@@ -831,7 +835,7 @@ ggplot() +
         legend.direction = "horizontal",
         axis.ticks=element_blank(),
         aspect.ratio = c(65/100)) +
-  labs(title = "Lionel Messi, Shot Map", subtitle = "UCL Final 2011") + #4
+  labs(title = "Lionel Messi, Shot Map", subtitle = "UCL Final 2011", caption =  "made by ¡d·m JÛzsef Kov·cs and Nguyen Nam Son") +
   scale_fill_gradientn(colours = shotmapxgcolors, limit = c(0,1), oob=scales::squish, name = "Expected Goals Value") +
   scale_shape_manual(values = c("Head" = 21, "Right Foot" = 23, "Left Foot" = 24), name ="") +
   guides(fill = guide_colourbar(title.position = "top"), 
@@ -931,7 +935,9 @@ p <- createPitch(
   geom_text(
     aes(x = 2, y=34,label = paste("Resulted in shot: ", sum(Messiforwardpasses$pass.shot_assist == TRUE))), hjust=0, vjust=0.5, size = 4, colour = "green"
   ) +
-  draw_image("C:\\ELTECON\\eltecon-datascience\\messi4.png",  x = 30, y = -10, scale = 30)
+  theme(plot.title = element_text(size=22),
+        plot.subtitle = element_text(size=10)) +
+  draw_image(".\\plots\\messi4.png",  x = 30, y = -10, scale = 30)
 
 Rooneyforwardpasses <- df_clean %>% filter(type.name == "Pass", player.name == "Wayne Rooney", pass.end_location.x>location.x)
 
@@ -954,7 +960,7 @@ pb <- createPitch(
   labs(
     title = "Progressive passes of Rooney", 
     subtitle = 'vs Barcelona',
-    caption = "made by √Åd√°m J√≥zsef Kov√°cs and Nguyen Nam Son"
+    caption =  "made by ¡d·m JÛzsef Kov·cs and Nguyen Nam Son"
   ) +
   geom_text(
     aes(x = 2, y=26,label = paste("Forward passes completed:", nrow(Rooneyforwardpasses))), hjust=0, vjust=0.5, size = 4.5, colour = "black"
@@ -965,7 +971,9 @@ pb <- createPitch(
   geom_text(
     aes(x = 2, y=34,label = paste("Resulted in shot: ", sum(Rooneyforwardpasses$pass.shot_assist == TRUE))), hjust=0, vjust=0.5, size = 4, colour = "green"
   )  +
-  draw_image("C:\\ELTECON\\eltecon-datascience\\Wayne-Rooney.png",  x = 30, y = -10, scale = 30)
+  theme(plot.title = element_text(size=22),
+        plot.subtitle = element_text(size=10)) +
+  draw_image(".\\plots\\Wayne-Rooney.png",  x = 30, y = -10, scale = 30)
 
 comp<- p + pb
 
@@ -1014,7 +1022,9 @@ p2 <- createPitch("#ffffff", "#A9A9A9", "#ffffff", "#000000", BasicFeatures=FALS
   geom_text(
     aes(x = 2, y=35,label = paste("Dribbles completed: ", sum(Messidribble$dribble.outcome.name=='Complete'))), hjust=0, vjust=0.5, size = 4, colour = "green"
   ) +
-  draw_image("C:\\ELTECON\\eltecon-datascience\\messi4.png",  x = 30, y = -10, scale = 30)
+  theme(plot.title = element_text(size=22),
+        plot.subtitle = element_text(size=10)) +
+  draw_image(".\\plots\\messi4.png",  x = 30, y = -10, scale = 30)
 
 #create same dataframes for Rooney
 
@@ -1035,7 +1045,7 @@ p2b <- createPitch("#ffffff", "#A9A9A9", "#ffffff", "#000000", BasicFeatures=FAL
   labs(
     title = "Ball carries and dribbles by Rooney", 
     subtitle = 'vs Barcelona',
-    caption = "made by √Åd√°m J√≥zsef Kov√°cs and Nguyen Nam Son"
+    caption =  "made by ¡d·m JÛzsef Kov·cs and Nguyen Nam Son"
   ) +
   geom_point(
     data = Rooneydribble, aes(x = location.x, y = location.y, shape = dribble.outcome.name), size = 4, alpha = 0.8, color = 'green'
@@ -1055,7 +1065,9 @@ p2b <- createPitch("#ffffff", "#A9A9A9", "#ffffff", "#000000", BasicFeatures=FAL
   geom_text(
     aes(x = 2, y=35,label = paste("Dribbles completed: ", sum(Rooneydribble$dribble.outcome.name=='Complete'))), hjust=0, vjust=0.5, size = 4, colour = "green"
   ) +
-  draw_image("C:\\ELTECON\\eltecon-datascience\\Wayne-Rooney.png",  x = 30, y = -10, scale = 30)
+  theme(plot.title = element_text(size=22),
+        plot.subtitle = element_text(size=10)) +
+  draw_image(".\\plots\\Wayne-Rooney.png",  x = 30, y = -10, scale = 30)
 
 comp2 <- p2 + p2b 
 
