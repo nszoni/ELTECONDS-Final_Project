@@ -403,13 +403,9 @@ ggplot(data=prog, aes(x=reorder(player.name, -progressgoalwards), y=progressgoal
   labs(title = "Ball Progression of Barcelona Forwards",
        subtitle = "Cumulative length of progressive passes and ball carries",
        x = element_blank(),
-<<<<<<< HEAD
        y = "Length(yards)",
        caption =  "made by Ádám József Kovács and Nguyen Nam Son"
        ) +
-=======
-       y = "Length (yards)") +
->>>>>>> 18f735a03ef40380ae6a082fdbffce88b430bd21
   theme_classic() +
   geom_label(aes(label = progressgoalwards), vjust = 0.5, position = position_dodge(0.9), color = "black", fontface = "bold", size = 4, show.legend = FALSE) +
   theme(legend.position = c(0.8, 0.7))
@@ -557,7 +553,7 @@ positions2
 
 forpassmap2 <- left_join(forpassmap2, positions2, by = "pass.recipient.name")
 
-myPalette <- colorRampPalette(rev(brewer.pal(11, "RdYlBu")))
+myPalette <- colorRampPalette(brewer.pal(11, "Reds"))
 sc <- scale_colour_gradientn(colours = myPalette(100), limits=c(0, max(forpassmap2$weight)), name = "Nr. of passes")
 
 m <- createPitch(
@@ -976,7 +972,8 @@ pb <- createPitch(
     aes(x = 2, y=34,label = paste("Resulted in shot: ", sum(Rooneyforwardpasses$pass.shot_assist == TRUE))), hjust=0, vjust=0.5, size = 4, colour = "green"
   )  +
   theme(plot.title = element_text(size=22),
-        plot.subtitle = element_text(size=10)) +
+        plot.subtitle = element_text(size=10),
+        legend.position = "bottom") +
   draw_image(".\\plots\\Wayne-Rooney.png",  x = 30, y = -10, scale = 30)
 
 comp<- p + pb
@@ -1070,7 +1067,9 @@ p2b <- createPitch("#ffffff", "#A9A9A9", "#ffffff", "#000000", BasicFeatures=FAL
     aes(x = 2, y=35,label = paste("Dribbles completed: ", sum(Rooneydribble$dribble.outcome.name=='Complete'))), hjust=0, vjust=0.5, size = 4, colour = "green"
   ) +
   theme(plot.title = element_text(size=22),
-        plot.subtitle = element_text(size=10)) +
+        plot.subtitle = element_text(size=10),
+        legend.position = "bottom"
+        ) +
   draw_image(".\\plots\\Wayne-Rooney.png",  x = 30, y = -10, scale = 30)
 
 comp2 <- p2 + p2b 
