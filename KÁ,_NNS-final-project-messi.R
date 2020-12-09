@@ -3,7 +3,7 @@
 
 ---
 # title: "Final Project"
-# author: "Kov·cs ¡d·m JÛzsef, Nguyen Nam Son"
+# author: "Kov√°cs √Åd√°m J√≥zsef, Nguyen Nam Son"
 # date: "04/12/2020"
 ---
   
@@ -23,7 +23,7 @@ matches <- FreeMatches(FreeCompetitions())
 
 df <- get.matchFree(subset(matches, match_id == 18236))
 
-wd <- file.path("~", "eltecon-datascience")
+wd <- file.path("~", "ELTECONDS-Final_Project")
 setwd(wd)
 
 # EDA ---------------------------------------------------------------------
@@ -36,61 +36,61 @@ df <- allclean(df)
 
 df_clean <- df %>% 
   mutate(player.name = case_when(
-    player.name == "Lionel AndrÈs Messi Cuccittini" ~  "Lionel Messi",
+    player.name == "Lionel Andr√©s Messi Cuccittini" ~  "Lionel Messi",
     player.name == "Eric-Sylvain Bilal Abidal" ~ "Eric Abidal",
     player.name == "Sergio Busquets i Burgos" ~ "Sergio Busquets",
     player.name == "Daniel Alves da Silva" ~ "Dani Alves",
-    player.name == "Xavier Hern·ndez Creus" ~ "Xavi",
-    player.name == "VÌctor ValdÈs Arribas" ~ "Victor Valdes",
+    player.name == "Xavier Hern√°ndez Creus" ~ "Xavi",
+    player.name == "V√≠ctor Vald√©s Arribas" ~ "Victor Valdes",
     player.name == "Javier Alejandro Mascherano" ~ "Javier Mascherano",
-    player.name == "David Villa S·nchez" ~ "David Villa",
-    player.name == "AndrÈs Iniesta Luj·n" ~ "Andres Iniesta",
-    player.name == "Gerard PiquÈ BernabÈu" ~ "Gerard Pique",
-    player.name == "Pedro Eliezer RodrÌguez Ledesma" ~ "Pedro",
-    player.name == "Seydou KÈita" ~ "Keita",
+    player.name == "David Villa S√°nchez" ~ "David Villa",
+    player.name == "Andr√©s Iniesta Luj√°n" ~ "Andres Iniesta",
+    player.name == "Gerard Piqu√© Bernab√©u" ~ "Gerard Pique",
+    player.name == "Pedro Eliezer Rodr√≠guez Ledesma" ~ "Pedro",
+    player.name == "Seydou K√©ita" ~ "Keita",
     player.name == "Carles Puyol i Saforcada" ~ "Carles Puyol",
     player.name == "Ji-Sung Park" ~  "Park Ji-Sung",
     player.name == "Patrice Evra" ~ "Patrice Evra",
     player.name == "Edwin van der Sar" ~ "Edwin van der Sar",
     player.name == "Paul Scholes" ~ "Paul Scholes",
-    player.name == "Javier Hern·ndez Balc·zar" ~ "Chicharito",
+    player.name == "Javier Hern√°ndez Balc√°zar" ~ "Chicharito",
     player.name == "Ryan Giggs" ~ "Ryan Giggs",
-    player.name == "Nemanja VidiÊ" ~ "Nemanja VidiÊ",
-    player.name == "F·bio Pereira da Silva" ~ "F·bio",
+    player.name == "Nemanja Vidi√¶" ~ "Nemanja Vidi√¶",
+    player.name == "F√°bio Pereira da Silva" ~ "F√°bio",
     player.name == "Wayne Mark Rooney" ~ "Wayne Rooney",
     player.name == "Luis Antonio Valencia Mosquera" ~ "Valencia",
     player.name == "Michael Carrick" ~ "Michael Carrick",
     player.name == "Rio Ferdinand" ~ "Rio Ferdinand",
-    player.name == "LuÌs Carlos Almeida da Cunha" ~ "Nani"))
+    player.name == "Lu√≠s Carlos Almeida da Cunha" ~ "Nani"))
 
 df_clean <- df_clean %>% 
   mutate(pass.recipient.name = case_when(
-    pass.recipient.name == "Lionel AndrÈs Messi Cuccittini" ~  "Lionel Messi",
+    pass.recipient.name == "Lionel Andr√©s Messi Cuccittini" ~  "Lionel Messi",
     pass.recipient.name == "Eric-Sylvain Bilal Abidal" ~ "Eric Abidal",
     pass.recipient.name == "Sergio Busquets i Burgos" ~ "Sergio Busquets",
     pass.recipient.name == "Daniel Alves da Silva" ~ "Dani Alves",
-    pass.recipient.name == "Xavier Hern·ndez Creus" ~ "Xavi",
-    pass.recipient.name == "VÌctor ValdÈs Arribas" ~ "Victor Valdes",
+    pass.recipient.name == "Xavier Hern√°ndez Creus" ~ "Xavi",
+    pass.recipient.name == "V√≠ctor Vald√©s Arribas" ~ "Victor Valdes",
     pass.recipient.name == "Javier Alejandro Mascherano" ~ "Javier Mascherano",
-    pass.recipient.name == "David Villa S·nchez" ~ "David Villa",
-    pass.recipient.name == "AndrÈs Iniesta Luj·n" ~ "Andres Iniesta",
-    pass.recipient.name == "Gerard PiquÈ BernabÈu" ~ "Gerard Pique",
-    pass.recipient.name == "Pedro Eliezer RodrÌguez Ledesma" ~ "Pedro",
-    pass.recipient.name == "Seydou KÈita" ~ "Keita",
+    pass.recipient.name == "David Villa S√°nchez" ~ "David Villa",
+    pass.recipient.name == "Andr√©s Iniesta Luj√°n" ~ "Andres Iniesta",
+    pass.recipient.name == "Gerard Piqu√© Bernab√©u" ~ "Gerard Pique",
+    pass.recipient.name == "Pedro Eliezer Rodr√≠guez Ledesma" ~ "Pedro",
+    pass.recipient.name == "Seydou K√©ita" ~ "Keita",
     pass.recipient.name == "Carles Puyol i Saforcada" ~ "Carles Puyol",
     pass.recipient.name == "Ji-Sung Park" ~  "Park Ji-Sung",
     pass.recipient.name == "Patrice Evra" ~ "Patrice Evra",
     pass.recipient.name == "Edwin van der Sar" ~ "Edwin van der Sar",
     pass.recipient.name == "Paul Scholes" ~ "Paul Scholes",
-    pass.recipient.name == "Javier Hern·ndez Balc·zar" ~ "Chicharito",
+    pass.recipient.name == "Javier Hern√°ndez Balc√°zar" ~ "Chicharito",
     pass.recipient.name == "Ryan Giggs" ~ "Ryan Giggs",
-    pass.recipient.name == "Nemanja VidiÊ" ~ "Nemanja VidiÊ",
-    pass.recipient.name == "F·bio Pereira da Silva" ~ "F·bio",
+    pass.recipient.name == "Nemanja Vidi√¶" ~ "Nemanja Vidi√¶",
+    pass.recipient.name == "F√°bio Pereira da Silva" ~ "F√°bio",
     pass.recipient.name == "Wayne Mark Rooney" ~ "Wayne Rooney",
     pass.recipient.name == "Luis Antonio Valencia Mosquera" ~ "Valencia",
     pass.recipient.name == "Michael Carrick" ~ "Michael Carrick",
     pass.recipient.name == "Rio Ferdinand" ~ "Rio Ferdinand",
-    pass.recipient.name == "LuÌs Carlos Almeida da Cunha" ~ "Nani"))
+    pass.recipient.name == "Lu√≠s Carlos Almeida da Cunha" ~ "Nani"))
 #If a shot has no XG value it is because it had 0 chance of earning a goal
 
 df_clean <- df_clean %>% mutate(shot.statsbomb_xg = if_else(is.na(shot.statsbomb_xg), 
@@ -221,17 +221,18 @@ passes <- barca %>% filter(type.name == 'Pass' & player.name != is.na(player.nam
 passes
 
 #Get the columns we want to use for this plot
+passes$newnames = paste(passes$player.name, " (", scales::percent(passes$successful/passes$n), ")", sep = "")
 
 passes2<-passes %>%
-  select(1, 4:5)%>%
-  pivot_longer(-player.name, names_to = "variable", values_to = "value") %>%
+  select(4:5, 12) %>%
+  pivot_longer(-newnames, names_to = "variable", values_to = "value") %>%
   na.omit()
 
 #Plot
 
-ggplot(passes2, aes(x =reorder(player.name, value), y = value, fill=fct_rev(variable))) + 
+ggplot(passes2, aes(x =reorder(newnames, value), y = value, fill=fct_rev(variable))) + 
   geom_bar(stat="identity", colour="white")+
-  labs(title = "Passes", subtitle = "UCL Final 2011-12",
+  labs(title = "Passes (Success Rate)", subtitle = "UCL Final 2011-12",
        x="Players",y ='', caption ="Unsuccessful = Incomplete or out") +
   theme(axis.text.y = element_text(size=14),
         axis.title = element_text(size=14),
@@ -271,17 +272,18 @@ shots <- barca %>% filter(type.name == 'Shot' & player.name != is.na(player.name
 shots
 
 #Get the columns we want to use for this plot
+shots$newnames = paste(shots$player.name, " (", scales::percent(shots$goal/shots$n), ")", sep = "")
 
 shots2<-shots %>%
-  select(1, 3:6) %>%
-  pivot_longer(-player.name, names_to = "variable", values_to = "value") %>%
+  select(3:7) %>%
+  pivot_longer(-newnames, names_to = "variable", values_to = "value") %>%
   na.omit()
 
 #Plot
 
-ggplot(shots2, aes(x =reorder(player.name, value), y = value, fill=fct_rev(variable))) + 
+ggplot(shots2, aes(x =reorder(newnames, value), y = value, fill=factor(variable, levels=c("goal", "saved", "blocked", "offtarget")))) + 
   geom_bar(stat="identity", colour="white")+
-  labs(title = "Shots", subtitle = "UCL Final 2011-12",
+  labs(title = "Shots (Conversion rate)", subtitle = "UCL Final 2011-12",
        x="Players",y ='')+
   theme(axis.text.y = element_text(size=14),
         axis.title = element_text(size=14),
@@ -296,7 +298,7 @@ ggplot(shots2, aes(x =reorder(player.name, value), y = value, fill=fct_rev(varia
         legend.title=element_blank(),
         legend.text = element_text(size=14),
         legend.position = "bottom") +
-  scale_fill_manual(values = c("red", "green", "yellow", "blue"), labels = c( "Saved","Off-target","Goal","Blocked")) +
+  scale_fill_manual(values = c("#800026", "#e31a1c","#fd8d3c", "#fed976")) +
   coord_flip()+ 
   guides(fill = guide_legend(reverse = TRUE))
 
@@ -317,17 +319,18 @@ dribble <- barca %>% filter(type.name == 'Dribble' & player.name != is.na(player
 dribble
 
 #Get the columns we want to use for this plot
+dribble$newnames = paste(dribble$player.name, " (", scales::percent(dribble$successful/dribble$n), ")", sep = "")
 
 dribble2<-dribble %>%
-  select(1, 3:4) %>%
-  pivot_longer(-player.name, names_to = "variable", values_to = "value") %>%
+  select(3:5) %>%
+  pivot_longer(-newnames, names_to = "variable", values_to = "value") %>%
   na.omit()
 
 #Plot
 
-ggplot(dribble2, aes(x =reorder(player.name, value), y = value, fill=fct_rev(variable))) + 
+ggplot(dribble2, aes(x =reorder(newnames, value), y = value, fill=fct_rev(variable))) + 
   geom_bar(stat="identity", colour="white")+
-  labs(title = "Dribbles", subtitle = "UCL Final 2011-12",
+  labs(title = "Dribbles (Success Rate)", subtitle = "UCL Final 2011-12",
        x="Players",y ='')+
   theme(axis.text.y = element_text(size=14),
         axis.title = element_text(size=14),
@@ -396,17 +399,18 @@ prog <- left_join(passes, shots, by = "player.name") %>% left_join(., dribble, b
 
 prog <- prog[3:5,]
 
-ggplot(data=prog, aes(x=reorder(player.name, -progressgoalwards), y=progressgoalwards)) +
+ggplot(data=prog, aes(x=reorder(player.name, progressgoalwards), y=progressgoalwards)) +
   geom_bar(stat="identity") +
   labs(title = "Ball Progression of Barcelona Forwards",
        subtitle = "Cumulative length of progressive passes and ball carries",
        x = element_blank(),
        y = "Length(yards)",
-       caption =  "made by ¡d·m JÛzsef Kov·cs and Nguyen Nam Son"
+       caption =  "made by √Åd√°m J√≥zsef Kov√°cs and Nguyen Nam Son"
        ) +
   theme_classic() +
   geom_label(aes(label = progressgoalwards), vjust = 0.5, position = position_dodge(0.9), color = "black", fontface = "bold", size = 4, show.legend = FALSE) +
-  theme(legend.position = c(0.8, 0.7))
+  theme(legend.position = c(0.8, 0.7)) +
+  coord_flip()
 
 # Function for creating a pitch -------------------------------------------
 
@@ -533,28 +537,34 @@ createPitch <- function(grass_colour, line_colour, background_colour, goal_colou
 
 # Pass network for Barca-------------------------------------------------
 
-barcapasses <- df_clean %>%
-  filter(type.name == 'Pass' & team.name == "Barcelona" & !is.na(player.name) & !is.na(pass.recipient.name)) %>% 
-  group_by(player.name, pass.recipient.name) %>% 
-  summarise(weight=n()) 
+passNetwork <- function(teamname)
+  {
+  pass <- df_clean %>%
+    filter(type.name == 'Pass' & team.name == teamname & !is.na(player.name) & !is.na(pass.recipient.name)) %>% 
+    group_by(player.name, pass.recipient.name) %>% 
+    summarise(weight=n()) 
+  
+  positions2 <- df_clean %>%
+    filter(team.name == teamname) %>%
+    group_by(player.name)%>%
+    summarize(avg_position_x = mean(na.omit(location.x)), avg_position_y = mean(na.omit(location.y)))
+  
+  
+  forpassmap2 <- merge(pass, positions2)
+  
+  colnames(positions2)[1] <- "pass.recipient.name"
+  positions2
+  
+  forpassmap2 <<- left_join(forpassmap2, positions2, by = "pass.recipient.name")
+  
+  myPalette <<- colorRampPalette(brewer.pal(11, "Reds"))
+  sc <<- scale_colour_gradientn(colours = myPalette(100), limits=c(0, max(forpassmap2$weight)), name = "Nr. of passes")
+}
 
-positions2 <- df_clean %>%
-  filter(team.name == 'Barcelona') %>%
-  group_by(player.name)%>%
-  summarize(avg_position_x = mean(na.omit(location.x)), avg_position_y = mean(na.omit(location.y)))
+passNetwork("Barcelona")
 
 
-forpassmap2 <- merge(barcapasses, positions2)
-
-colnames(positions2)[1] <- "pass.recipient.name"
-positions2
-
-forpassmap2 <- left_join(forpassmap2, positions2, by = "pass.recipient.name")
-
-myPalette <- colorRampPalette(brewer.pal(11, "Reds"))
-sc <- scale_colour_gradientn(colours = myPalette(100), limits=c(0, max(forpassmap2$weight)), name = "Nr. of passes")
-
-m <- createPitch(
+b <- createPitch(
   "#ffffff", "#A9A9A9", "#ffffff", "#000000", BasicFeatures=FALSE
 )  +
   geom_segment(
@@ -565,13 +575,37 @@ m <- createPitch(
   geom_label(data = forpassmap2, aes(x = avg_position_x.x, y = avg_position_y.x, label=player.name),hjust=0, vjust=0, size = 3.5) +sc + labs(
     title = "Barcelona pass network", 
     subtitle = 'vs Manchester United',
-    caption = "made by ¡d·m JÛzsef Kov·cs and Nguyen Nam Son"
+    caption = "made by ?d?m J?zsef Kov?cs and Nguyen Nam Son"
   )+
   theme(plot.title = element_text(size=32),
         plot.subtitle = element_text(size=20)) +
   draw_image(".\\plots\\barca.png",  x = 20, y = 65, scale = 30)
 
+b
+
+#For United
+
+passNetwork("Manchester United")
+
+m <- createPitch(
+  "#ffffff", "#A9A9A9", "#ffffff", "#000000", BasicFeatures=FALSE
+)  +
+  geom_segment(
+    data = forpassmap2, aes(x = avg_position_x.x, y = avg_position_y.x, xend = avg_position_x.y, yend = avg_position_y.y, color = weight),size = 1, alpha = 0.8)+
+  geom_point(
+    data = forpassmap2, aes(x = avg_position_x.x, y = avg_position_y.x, label = player.name), alpha = 0.7, size = 7, shape = 1
+  )+ 
+  geom_label(data = forpassmap2, aes(x = avg_position_x.x, y = avg_position_y.x, label=player.name),hjust=0, vjust=0, size = 3.5) +sc + labs(
+    title = "Manchester United pass network", 
+    subtitle = 'vs Barcelona',
+    caption = "made by √Åd√°m J√≥zsef Kov√°cs and Nguyen Nam Son"
+  )+
+  theme(plot.title = element_text(size=32),
+        plot.subtitle = element_text(size=20)) +
+  draw_image(".\\plots\\mun.png",  x = 20, y = 65, scale = 30)
+
 m
+
 # Radar plot for forward Barca trio ---------------------------------------------
 
 radar <- left_join(passes[,c(1,2,4,5,11)], shots, by = "player.name") %>% left_join(., dribble, by = "player.name") %>% left_join(., foulwon, by = "player.name")
@@ -692,7 +726,7 @@ xg_timelineplot <- df_clean %>%
   scale_y_continuous(limits = c(-0.005, 0.005),
                      expand = c(0, 0)) +
   scale_size(range = c(2, 6)) +
-  labs(caption =  "made by ¡d·m JÛzsef Kov·cs and Nguyen Nam Son") +
+  labs(caption =  "made by ?d?m J?zsef Kov?cs and Nguyen Nam Son") +
   theme_minimal() +
   theme(legend.position = "none",
         strip.text = element_text(size = 16, 
@@ -833,7 +867,7 @@ ggplot() +
         legend.direction = "horizontal",
         axis.ticks=element_blank(),
         aspect.ratio = c(65/100)) +
-  labs(title = "Lionel Messi, Shot Map", subtitle = "UCL Final 2011", caption =  "made by ¡d·m JÛzsef Kov·cs and Nguyen Nam Son") +
+  labs(title = "Lionel Messi, Shot Map", subtitle = "UCL Final 2011", caption =  "made by ?d?m J?zsef Kov?cs and Nguyen Nam Son") +
   scale_fill_gradientn(colours = shotmapxgcolors, limit = c(0,1), oob=scales::squish, name = "Expected Goals Value") +
   scale_shape_manual(values = c("Head" = 21, "Right Foot" = 23, "Left Foot" = 24), name ="") +
   guides(fill = guide_colourbar(title.position = "top"), 
@@ -850,7 +884,8 @@ barvsrm <- radarvs2[(radarvs2$player.name %in% c("Wayne Rooney", "Lionel Messi")
 
 ggplot(barvsrm, aes(variable, value, fill = player.name)) +
   geom_bar(stat = "identity", position = "dodge") +
-  labs(title = "Comparison of Messi and Rooney's performance in the UCL Final",
+  labs(title = "Comparison of <span style='color:#0072B2'>Messis</span> and
+       <span style='color:#0072B2'>Rooneys</span> performance in the UCL Final",
        subtitle = "Messi performs better in every aspects of the game",
        x = "Metrics",
        y = "Count",
@@ -958,7 +993,7 @@ pb <- createPitch(
   labs(
     title = "Progressive passes of Rooney", 
     subtitle = 'vs Barcelona',
-    caption =  "made by ¡d·m JÛzsef Kov·cs and Nguyen Nam Son"
+    caption =  "made by ?d?m J?zsef Kov?cs and Nguyen Nam Son"
   ) +
   geom_text(
     aes(x = 2, y=26,label = paste("Forward passes completed:", nrow(Rooneyforwardpasses))), hjust=0, vjust=0.5, size = 4.5, colour = "black"
@@ -1044,7 +1079,7 @@ p2b <- createPitch("#ffffff", "#A9A9A9", "#ffffff", "#000000", BasicFeatures=FAL
   labs(
     title = "Ball carries and dribbles by Rooney", 
     subtitle = 'vs Barcelona',
-    caption =  "made by ¡d·m JÛzsef Kov·cs and Nguyen Nam Son"
+    caption =  "made by ?d?m J?zsef Kov?cs and Nguyen Nam Son"
   ) +
   geom_point(
     data = Rooneydribble, aes(x = location.x, y = location.y, shape = dribble.outcome.name), size = 4, alpha = 0.8, color = 'green'
