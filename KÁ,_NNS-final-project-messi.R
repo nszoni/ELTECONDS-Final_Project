@@ -912,19 +912,21 @@ radarvs2 <- melt(radarvs, id.vars = "player.name")
 barvsrm <- radarvs2[(radarvs2$player.name %in% c("Wayne Rooney", "Lionel Messi") & radarvs2$variable %in% c("n.x", "forward", "n.y", "n.x.x", "n.y.y")),]
 barvsrm$value <- ifelse(is.na(barvsrm$value), 0, barvsrm$value)
 
-ggplot(barvsrm, aes(variable, value, fill = player.name)) +
+barvsrm$player.name <- factor(barvsrm$player.name, levels = c("Wayne Rooney", "Lionel Messi"), ordered = FALSE)
+
+ggplot(barvsrm, aes(reorder(variable, value), value, fill = player.name)) +
   geom_bar(stat = "identity", position = "dodge") +
-  labs(title = "Comparison of <span style='color:#0072B2'>Messis</span> and
-       <span style='color:#0072B2'>Rooneys</span> performance in the UCL Final",
+  scale_fill_manual(values = c("blue", "red"), labels = c("Wayne Rooney", "Lionel Messi")) +
+  labs(title = "Comparison of Messi's and Rooney's performance in the UCL Final",
        subtitle = "Messi performs better in every aspects of the game",
        x = "Metrics",
        y = "Count",
        fill = "Player") +
   scale_x_discrete(labels = c("No. Pass", "No. Forward Pass", "No. Shots", "No. Dribbles", "No.Fouls Won")) +
   theme_classic() +
-  geom_label(aes(label = value), vjust = 0.5, position = position_dodge(0.9), color = "black", fontface = "bold", size = 4, show.legend = FALSE) +
+  geom_label(aes(label = value), vjust = 0.5, position = position_dodge(0.9), color = "white", fontface = "bold", size = 4, show.legend = FALSE) +
   theme(legend.position = c(0.8, 0.7)) +
-  coord_flip()
+  coord_flip() 
 
 # Radar comparison ------------------------------------
 
@@ -978,17 +980,13 @@ passPlot <- function(plyr, oppos, image)
     geom_segment(
       data =forwardpasses, aes(x = location.x, y = location.y, xend = pass.end_location.x, yend = pass.end_location.y, colour = pass.outcome.name),alpha = 0.7, arrow = arrow(length = unit(0.08,"inches"))
     ) +
-    scale_colour_manual(
-      values = c("blue", "red", "green", "yellow") , name = "Outcome", labels = c("Successful", "Unsuccessful", "Resulted in shot"), guide = FALSE
-    ) +
     scale_y_reverse()+ 
     geom_segment(
       data = forwardpasses[forwardpasses$pass.shot_assist == TRUE, ], aes(x = location.x, y = location.y,  xend = pass.end_location.x, yend = pass.end_location.y, color = "purple"), alpha = 0.7, arrow = arrow(length = unit(0.08,"inches"))
     ) +
     labs(
       title = paste("Progressive passes of",plyr), 
-      subtitle = paste('vs',oppos),
-      caption = "made by Kovács Ádám and Nguyen Nam Son"
+      subtitle = paste('vs',oppos)
     ) +
     geom_text(
       aes(x = 2, y=26,label = paste("Forward passes completed: ", nrow(forwardpasses))), hjust=0, vjust=0.5, size = 4.5, colour = "black"
@@ -1001,7 +999,7 @@ passPlot <- function(plyr, oppos, image)
     ) +
     theme(plot.title = element_text(size=22),
           plot.subtitle = element_text(size=10),
-          legend.position = "bottom") +
+          legend.position = "none") +
     draw_image(paste(".\\plots\\", image, sep =""),  x = 30, y = -10, scale = 30)
   
   return(p)
@@ -1009,15 +1007,17 @@ passPlot <- function(plyr, oppos, image)
 
 p <- passPlot("Lionel Messi", "Manchester United", "messi4.png")
 
-pb <- passPlot("Wayne Rooney", "Barcelona", "Wayne-Rooney.png")
+pb <- passPlot("Wayne Rooney", "Barcelona", "Wayne-Rooney.png") + scale_colour_manual(
+  values = c("blue", "red", "purple", "green") , name = "Outcome", labels = c("Successful", "Unsuccessful", "Out of play", "Resulted in shot")) +
+  theme(legend.position = "bottom")
 
-comp<- p + pb + plot_layout(guides = "collect")
+comp<- p + pb
 
 comp
 
 # Ball carry comparison ---------------------------------------------------
 
-ballCarry <- function(plyr, oppos, image)
+ballCarry <- function(plyr, oppos, image, guide)
 {
   carry <- df_clean %>% filter (type.name == 'Carry', player.name == plyr)
   
@@ -1032,19 +1032,18 @@ ballCarry <- function(plyr, oppos, image)
       data = carry, aes(x = ifelse(carry.end_location.x>location.x,location.x,NA), y = location.y, xend = carry.end_location.x, yend = carry.end_location.y, colour = under_pressure),alpha = 0.9, arrow = arrow(length = unit(0.08,"inches"))
     ) +
     scale_colour_manual(
-      values = c("blue", "red") , name = "Under Pressure", labels = c('Not', 'Yes'), guide = FALSE
+      values = c("blue", "red") , name = "Under Pressure", labels = c('Not', 'Yes')
     ) +
     scale_y_reverse()+ 
     labs(
       title = paste("Ball carries and dribbles by", plyr), 
-      subtitle = paste('vs', oppos),
-      caption =  "made by Kovács Ádám and Nguyen Nam Son"
+      subtitle = paste('vs', oppos)
     ) +
     geom_point(
       data = dribble, aes(x = location.x, y = location.y, shape = dribble.outcome.name), size = 4, alpha = 0.8, color = 'green'
     ) +
     scale_shape_manual(
-      values = c("O", 'X'), name = "Dribble", labels = c('Complete','Incomplete' ), guide = FALSE
+      values = c("O", 'X'), name = "Dribble", labels = c('Complete','Incomplete')
     ) +
     geom_text(
       aes(x = 2, y=26,label = paste("Carries completed: ", nrow(carry))), hjust=0, vjust=0.5, size = 4.5, colour = "black"
@@ -1060,18 +1059,18 @@ ballCarry <- function(plyr, oppos, image)
     ) +
     theme(plot.title = element_text(size=22),
           plot.subtitle = element_text(size=10),
-          legend.position = "bottom")+
+          legend.position = guide)+
     draw_image(paste(".\\plots\\",image, sep = ""),  x = 30, y = -10, scale = 30)
   
   return(p2)
 
 }
 
-p2 <- ballCarry("Lionel Messi", "Manchester United", "messi4.png")
+p2 <- ballCarry("Lionel Messi", "Manchester United", "messi4.png", "none")
 
-p2b <- ballCarry("Wayne Rooney", "Barcelona", "Wayne-Rooney.png")
+p2b <- ballCarry("Wayne Rooney", "Barcelona", "Wayne-Rooney.png", "bottom")
 
-comp2 <- p2 + p2b + plot_layout(guides = "collect")
+comp2 <- p2 + p2b
 
 comp2
 ######################
