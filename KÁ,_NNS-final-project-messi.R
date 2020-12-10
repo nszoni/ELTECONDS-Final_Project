@@ -383,6 +383,23 @@ ggplot(foulwon, aes(x =reorder(player.name, n), y = n)) +
   coord_flip()+ 
   guides(fill = guide_legend(reverse = TRUE))
 
+
+# Relationship between xG and distance to goal -------------------------------
+
+xgdist <- df_clean %>% filter(type.name == 'Shot', shot.statsbomb_xg != 0)
+ggplot(data = xgdist) +
+  geom_point(aes(DistToGoal, shot.statsbomb_xg, color = team.name)) +
+  geom_smooth(aes(DistToGoal, shot.statsbomb_xg), method = "auto") +
+  labs(title = "Relationship between Distance to Goal and xG scores",
+       subtitle = "As the distance increases, xG decreases (using loess method)",
+       caption = "made by Kovács Ádám, Nguyen Nam Son",
+       x = "Distance to Goal (yards)",
+       y = "xG",
+       color = "Team") +
+  scale_color_manual(values=c("red", "blue"), labels = c("Barcelona", "Manchester United")) +
+  theme_classic() +
+  theme(legend.position = c(0.8, 0.7))
+
 # Progressive plays -------------------------------------------------------
 
 togoal_carry <- barca %>% filter(type.name == 'Carry' & player.name != is.na(player.name)) %>%
@@ -867,12 +884,13 @@ ggplot() +
         legend.direction = "horizontal",
         axis.ticks=element_blank(),
         aspect.ratio = c(65/100)) +
-  labs(title = "Lionel Messi, Shot Map", subtitle = "UCL Final 2011", caption =  "made by ?d?m J?zsef Kov?cs and Nguyen Nam Son") +
+  labs(title = "Lionel Messi, Shot Map", subtitle = "UCL Final 2011", caption =  "made by Kovács Ádám and Nguyen Nam Son") +
   scale_fill_gradientn(colours = shotmapxgcolors, limit = c(0,1), oob=scales::squish, name = "Expected Goals Value") +
   scale_shape_manual(values = c("Head" = 21, "Right Foot" = 23, "Left Foot" = 24), name ="") +
   guides(fill = guide_colourbar(title.position = "top"), 
          shape = guide_legend(override.aes = list(size = 7, fill = "black"))) +
-  coord_flip(xlim = c(85, 125))
+  coord_flip(xlim = c(85, 125)) +
+  geom_text(aes(x=95, label="GOAL", y=38), colour="red", text=element_text(size=11), fontface = "bold")
 
 # Comparisons of Messi and Rooney -----------------------------------------
 
@@ -933,182 +951,116 @@ legend(x=1,
 
 # Pass plot comparison ----------------------------------------------------
 
-#Create dataframe to be used for next plot by filtering on passes and Messi
+passPlot <- function(plyr, oppos, image)
+{
+  
+  forwardpasses <- df_clean %>% filter(type.name == "Pass", player.name == plyr, pass.end_location.x>location.x)
+  
+  p <- createPitch(
+    "#ffffff", "#A9A9A9", "#ffffff", "#000000", BasicFeatures=FALSE
+  ) +
+    geom_point(
+      data = forwardpasses, aes(x = location.x, y = location.y), alpha = 0.7
+    ) +
+    geom_segment(
+      data =forwardpasses, aes(x = location.x, y = location.y, xend = pass.end_location.x, yend = pass.end_location.y, colour = pass.outcome.name),alpha = 0.7, arrow = arrow(length = unit(0.08,"inches"))
+    ) +
+    scale_colour_manual(
+      values = c("blue", "red", "green", "yellow") , name = "Outcome", labels = c("Successful", "Unsuccessful", "Resulted in shot"), guide = FALSE
+    ) +
+    scale_y_reverse()+ 
+    geom_segment(
+      data = forwardpasses[forwardpasses$pass.shot_assist == TRUE, ], aes(x = location.x, y = location.y,  xend = pass.end_location.x, yend = pass.end_location.y, color = "purple"), alpha = 0.7, arrow = arrow(length = unit(0.08,"inches"))
+    ) +
+    labs(
+      title = paste("Progressive passes of",plyr), 
+      subtitle = paste('vs',oppos),
+      caption = "made by Kovács Ádám and Nguyen Nam Son"
+    ) +
+    geom_text(
+      aes(x = 2, y=26,label = paste("Forward passes completed: ", nrow(forwardpasses))), hjust=0, vjust=0.5, size = 4.5, colour = "black"
+    ) +
+    geom_text(
+      aes(x = 2, y=30,label = paste("Successful passes: ", sum(forwardpasses$pass.outcome.name == "Complete"))), hjust=0, vjust=0.5, size = 4, colour = "blue"
+    ) +
+    geom_text(
+      aes(x = 2, y=34,label = paste("Resulted in shot: ", sum(forwardpasses$pass.shot_assist == TRUE))), hjust=0, vjust=0.5, size = 4, colour = "green"
+    ) +
+    theme(plot.title = element_text(size=22),
+          plot.subtitle = element_text(size=10),
+          legend.position = "bottom") +
+    draw_image(paste(".\\plots\\", image, sep =""),  x = 30, y = -10, scale = 30)
+  
+  return(p)
+}
 
-Messiforwardpasses <- df_clean %>% filter(type.name == "Pass", player.name == "Lionel Messi", pass.end_location.x>location.x)
+p <- passPlot("Lionel Messi", "Manchester United", "messi4.png")
 
-#Plot
+pb <- passPlot("Wayne Rooney", "Barcelona", "Wayne-Rooney.png")
 
-p <- createPitch(
-  "#ffffff", "#A9A9A9", "#ffffff", "#000000", BasicFeatures=FALSE
-) +
-  geom_point(
-    data = Messiforwardpasses, aes(x = location.x, y = location.y), alpha = 0.7
-  ) +
-  geom_segment(
-    data = Messiforwardpasses, aes(x = location.x, y = location.y, xend = pass.end_location.x, yend = pass.end_location.y, colour = pass.outcome.name),alpha = 0.7, arrow = arrow(length = unit(0.08,"inches"))
-  ) +
-  scale_colour_manual(
-    values = c("blue", "red", "green") , name = "Outcome", labels = c("Successful", "Unsuccessful", "Resulted in shot"), guide = FALSE
-  ) +
-  scale_y_reverse()+ 
-  geom_segment(
-    data = Messiforwardpasses[Messiforwardpasses$pass.shot_assist == TRUE, ], aes(x = location.x, y = location.y,  xend = pass.end_location.x, yend = pass.end_location.y, color = "purple"), alpha = 0.7, arrow = arrow(length = unit(0.08,"inches"))
-  ) +
-  labs(
-    title = "Progressive passes of Messi", 
-    subtitle = 'vs Manchester United'
-  ) +
-  geom_text(
-    aes(x = 2, y=26,label = paste("Forward passes completed: ", nrow(Messiforwardpasses))), hjust=0, vjust=0.5, size = 4.5, colour = "black"
-  ) +
-  geom_text(
-    aes(x = 2, y=30,label = paste("Successful passes: ", sum(Messiforwardpasses$pass.outcome.name == "Complete"))), hjust=0, vjust=0.5, size = 4, colour = "blue"
-  ) +
-  geom_text(
-    aes(x = 2, y=34,label = paste("Resulted in shot: ", sum(Messiforwardpasses$pass.shot_assist == TRUE))), hjust=0, vjust=0.5, size = 4, colour = "green"
-  ) +
-  theme(plot.title = element_text(size=22),
-        plot.subtitle = element_text(size=10)) +
-  draw_image(".\\plots\\messi4.png",  x = 30, y = -10, scale = 30)
-
-Rooneyforwardpasses <- df_clean %>% filter(type.name == "Pass", player.name == "Wayne Rooney", pass.end_location.x>location.x)
-
-pb <- createPitch(
-  "#ffffff", "#A9A9A9", "#ffffff", "#000000", BasicFeatures=FALSE
-) +
-  geom_point(
-    data = Rooneyforwardpasses, aes(x = location.x, y = location.y), alpha = 0.7
-  ) +
-  geom_segment(
-    data = Rooneyforwardpasses, aes(x = location.x, y = location.y, xend = pass.end_location.x, yend = pass.end_location.y, colour = pass.outcome.name),alpha = 0.7, arrow = arrow(length = unit(0.08,"inches"))
-  ) +
-  scale_colour_manual(
-    values = c("blue", "red", "purple", "green") , name = "Outcome", labels = c("Successful", "Unsuccessful", "Out of play", "Resulted in shot")
-  ) +
-  geom_segment(
-    data = Rooneyforwardpasses[Rooneyforwardpasses$pass.shot_assist == TRUE, ], aes(x = location.x, y = location.y,  xend = pass.end_location.x, yend = pass.end_location.y, color = "purple"), alpha = 0.7, arrow = arrow(length = unit(0.08,"inches"))
-  ) +
-  scale_y_reverse()+ 
-  labs(
-    title = "Progressive passes of Rooney", 
-    subtitle = 'vs Barcelona',
-    caption =  "made by ?d?m J?zsef Kov?cs and Nguyen Nam Son"
-  ) +
-  geom_text(
-    aes(x = 2, y=26,label = paste("Forward passes completed:", nrow(Rooneyforwardpasses))), hjust=0, vjust=0.5, size = 4.5, colour = "black"
-  ) +
-  geom_text(
-    aes(x = 2, y=30,label = paste("Successful passes: ", sum(Rooneyforwardpasses$pass.outcome.name == "Complete"))), hjust=0, vjust=0.5, size = 4, colour = "blue"
-  ) +
-  geom_text(
-    aes(x = 2, y=34,label = paste("Resulted in shot: ", sum(Rooneyforwardpasses$pass.shot_assist == TRUE))), hjust=0, vjust=0.5, size = 4, colour = "green"
-  )  +
-  theme(plot.title = element_text(size=22),
-        plot.subtitle = element_text(size=10),
-        legend.position = "bottom") +
-  draw_image(".\\plots\\Wayne-Rooney.png",  x = 30, y = -10, scale = 30)
-
-comp<- p + pb
+comp<- p + pb + plot_layout(guides = "collect")
 
 comp
 
 # Ball carry comparison ---------------------------------------------------
 
-#Create dataframes to be used for plot by filtering on type of event and Messi
+ballCarry <- function(plyr, oppos, image)
+{
+  carry <- df_clean %>% filter (type.name == 'Carry', player.name == plyr)
+  
+  carry$under_pressure <- ifelse(is.na(carry$under_pressure), FALSE, TRUE)
+  
+  dribble <- df_clean %>% filter(type.name == 'Dribble', player.name == plyr)
+  
+  p2 <- createPitch("#ffffff", "#A9A9A9", "#ffffff", "#000000", BasicFeatures=FALSE) +
+    geom_point(
+      data = carry, aes(x = ifelse(carry.end_location.x>location.x, location.x,NA), y = location.y), alpha = 0.7) + 
+    geom_segment(
+      data = carry, aes(x = ifelse(carry.end_location.x>location.x,location.x,NA), y = location.y, xend = carry.end_location.x, yend = carry.end_location.y, colour = under_pressure),alpha = 0.9, arrow = arrow(length = unit(0.08,"inches"))
+    ) +
+    scale_colour_manual(
+      values = c("blue", "red") , name = "Under Pressure", labels = c('Not', 'Yes'), guide = FALSE
+    ) +
+    scale_y_reverse()+ 
+    labs(
+      title = paste("Ball carries and dribbles by", plyr), 
+      subtitle = paste('vs', oppos),
+      caption =  "made by Kovács Ádám and Nguyen Nam Son"
+    ) +
+    geom_point(
+      data = dribble, aes(x = location.x, y = location.y, shape = dribble.outcome.name), size = 4, alpha = 0.8, color = 'green'
+    ) +
+    scale_shape_manual(
+      values = c("O", 'X'), name = "Dribble", labels = c('Complete','Incomplete' ), guide = FALSE
+    ) +
+    geom_text(
+      aes(x = 2, y=26,label = paste("Carries completed: ", nrow(carry))), hjust=0, vjust=0.5, size = 4.5, colour = "black"
+    ) +
+    geom_text(
+      aes(x = 2, y=29,label = paste("Carries under pressure: ", sum(carry$under_pressure==TRUE))), hjust=0, vjust=0.5, size = 4, colour = "red"
+    ) +
+    geom_text(
+      aes(x = 2, y=32,label = paste("Dribbles attempted: ", nrow(dribble))), hjust=0, vjust=0.5, size = 4.5, colour = "green"
+    ) +
+    geom_text(
+      aes(x = 2, y=35,label = paste("Dribbles completed: ", sum(dribble$dribble.outcome.name=='Complete'))), hjust=0, vjust=0.5, size = 4, colour = "green"
+    ) +
+    theme(plot.title = element_text(size=22),
+          plot.subtitle = element_text(size=10),
+          legend.position = "bottom")+
+    draw_image(paste(".\\plots\\",image, sep = ""),  x = 30, y = -10, scale = 30)
+  
+  return(p2)
 
-Messicarry <- df_clean %>% filter (type.name == 'Carry', player.name == 'Lionel Messi')
+}
 
-Messicarry$under_pressure <- ifelse(is.na(Messicarry$under_pressure), FALSE, TRUE)
+p2 <- ballCarry("Lionel Messi", "Manchester United", "messi4.png")
 
-Messidribble <- df_clean %>% filter(type.name == 'Dribble', player.name == 'Lionel Messi')
+p2b <- ballCarry("Wayne Rooney", "Barcelona", "Wayne-Rooney.png")
 
-
-p2 <- createPitch("#ffffff", "#A9A9A9", "#ffffff", "#000000", BasicFeatures=FALSE) +
-  geom_point(
-    data = Messicarry, aes(x = ifelse(carry.end_location.x>location.x, location.x,NA), y = location.y), alpha = 0.7) + 
-  geom_segment(
-    data = Messicarry, aes(x = ifelse(carry.end_location.x>location.x,location.x,NA), y = location.y, xend = carry.end_location.x, yend = carry.end_location.y, colour = under_pressure),alpha = 0.9, arrow = arrow(length = unit(0.08,"inches"))
-  ) +
-  scale_colour_manual(
-    values = c("blue", "red") , name = "Under Pressure", labels = c('Not', 'Yes'), guide = FALSE
-  ) +
-  scale_y_reverse()+ 
-  labs(
-    title = "Ball carries and dribbles by Messi", 
-    subtitle = 'vs Manchester United'
-  ) +
-  geom_point(
-    data = Messidribble, aes(x = location.x, y = location.y, shape = dribble.outcome.name), size = 4, alpha = 0.8, color = 'green'
-  ) +
-  scale_shape_manual(
-    values = c("O", 'X'), name = "Dribble", labels = c('Complete','Incomplete' ), guide = FALSE
-  ) +
-  geom_text(
-    aes(x = 2, y=26,label = paste("Carries completed: ", nrow(Messicarry))), hjust=0, vjust=0.5, size = 4.5, colour = "black"
-  ) +
-  geom_text(
-    aes(x = 2, y=29,label = paste("Carries under pressure: ", sum(Messicarry$under_pressure==TRUE))), hjust=0, vjust=0.5, size = 4, colour = "red"
-  ) +
-  geom_text(
-    aes(x = 2, y=32,label = paste("Dribbles attempted: ", nrow(Messidribble))), hjust=0, vjust=0.5, size = 4.5, colour = "green"
-  ) +
-  geom_text(
-    aes(x = 2, y=35,label = paste("Dribbles completed: ", sum(Messidribble$dribble.outcome.name=='Complete'))), hjust=0, vjust=0.5, size = 4, colour = "green"
-  ) +
-  theme(plot.title = element_text(size=22),
-        plot.subtitle = element_text(size=10)) +
-  draw_image(".\\plots\\messi4.png",  x = 30, y = -10, scale = 30)
-
-#create same dataframes for Rooney
-
-Rooneycarry <- df_clean %>% filter (type.name == 'Carry', player.name == 'Wayne Rooney')
-
-Rooneycarry$under_pressure <- ifelse(is.na(Rooneycarry$under_pressure), FALSE, TRUE)
-
-Rooneydribble <- df_clean %>% filter(type.name == 'Dribble', player.name == 'Wayne Rooney')
-
-p2b <- createPitch("#ffffff", "#A9A9A9", "#ffffff", "#000000", BasicFeatures=FALSE) +
-  geom_point(
-    data = Rooneycarry, aes(x = ifelse(carry.end_location.x>location.x, location.x,NA), y = location.y), alpha = 0.7) + 
-  geom_segment(
-    data = Rooneycarry, aes(x = ifelse(carry.end_location.x>location.x,location.x,NA), y = location.y, xend = carry.end_location.x, yend = carry.end_location.y, colour = under_pressure),alpha = 0.9, arrow = arrow(length = unit(0.08,"inches"))
-  ) +
-  scale_colour_manual(values = c("blue", "red") , name = "Under Pressure", labels = c('Not', 'Yes')) +
-  scale_y_reverse()+ 
-  labs(
-    title = "Ball carries and dribbles by Rooney", 
-    subtitle = 'vs Barcelona',
-    caption =  "made by ?d?m J?zsef Kov?cs and Nguyen Nam Son"
-  ) +
-  geom_point(
-    data = Rooneydribble, aes(x = location.x, y = location.y, shape = dribble.outcome.name), size = 4, alpha = 0.8, color = 'green'
-  ) +
-  scale_shape_manual(
-    values = c("O", 'X'), name = "Dribble", labels = c('Complete','Incomplete' )
-  ) +
-  geom_text(
-    aes(x = 2, y=26,label = paste("Carries completed: ", nrow(Rooneycarry))), hjust=0, vjust=0.5, size = 4.5, colour = "black"
-  ) +
-  geom_text(
-    aes(x = 2, y=29,label = paste("Carries under pressure: ", sum(Rooneycarry$under_pressure==TRUE))), hjust=0, vjust=0.5, size = 4, colour = "red"
-  ) +
-  geom_text(
-    aes(x = 2, y=32,label = paste("Dribbles attempted: ", nrow(Rooneydribble))), hjust=0, vjust=0.5, size = 4.5, colour = "green"
-  ) +
-  geom_text(
-    aes(x = 2, y=35,label = paste("Dribbles completed: ", sum(Rooneydribble$dribble.outcome.name=='Complete'))), hjust=0, vjust=0.5, size = 4, colour = "green"
-  ) +
-  theme(plot.title = element_text(size=22),
-        plot.subtitle = element_text(size=10),
-        legend.position = "bottom"
-        ) +
-  draw_image(".\\plots\\Wayne-Rooney.png",  x = 30, y = -10, scale = 30)
-
-comp2 <- p2 + p2b 
+comp2 <- p2 + p2b + plot_layout(guides = "collect")
 
 comp2
-
 ######################
 #     END OF CODE    #
 ######################
