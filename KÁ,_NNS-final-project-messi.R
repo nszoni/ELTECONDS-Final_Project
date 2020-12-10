@@ -249,7 +249,9 @@ ggplot(passes2, aes(x =reorder(newnames, value), y = value, fill=fct_rev(variabl
         legend.position = "bottom") + 
   scale_fill_manual(values=c("#3371AC", "#DC2228"), labels = c( "Unsuccessful","Successful")) +
   coord_flip()+ 
-  guides(fill = guide_legend(reverse = TRUE)) 
+  guides(fill = guide_legend(reverse = TRUE))
+
+passes <- passes[, !names(passes) == "newnames"]
 
 #create datasets specifically for statistics about shots
 
@@ -302,6 +304,8 @@ ggplot(shots2, aes(x =reorder(newnames, value), y = value, fill=factor(variable,
   coord_flip()+ 
   guides(fill = guide_legend(reverse = TRUE))
 
+shots <- shots[, !names(shots) == "newnames"]
+
 #create datasets specifically for statistics about dribbles
 
 dribblemu <- mun %>% filter(type.name == 'Dribble' & player.name != is.na(player.name)) %>%
@@ -347,7 +351,9 @@ ggplot(dribble2, aes(x =reorder(newnames, value), y = value, fill=fct_rev(variab
         legend.position = "bottom") +
   scale_fill_manual(values = c("red", "green"), labels = c("Unsuccessful", "Successful")) +
   coord_flip()+ 
-  guides(fill = guide_legend(reverse = TRUE)) 
+  guides(fill = guide_legend(reverse = TRUE))
+
+dribble <- dribble[, !names(dribble) == "newnames"]
 
 #create datasets specifically for statistics about fould won
 
@@ -386,19 +392,24 @@ ggplot(foulwon, aes(x =reorder(player.name, n), y = n)) +
 
 # Relationship between xG and distance to goal -------------------------------
 
+reg <- lm(shot.statsbomb_xg ~ DistToGoal, data = df_clean)
+
+reg$
+
 xgdist <- df_clean %>% filter(type.name == 'Shot', shot.statsbomb_xg != 0)
 ggplot(data = xgdist) +
   geom_point(aes(DistToGoal, shot.statsbomb_xg, color = team.name)) +
-  geom_smooth(aes(DistToGoal, shot.statsbomb_xg), method = "auto") +
+  geom_smooth(aes(DistToGoal, shot.statsbomb_xg), method = "lm") +
   labs(title = "Relationship between Distance to Goal and xG scores",
-       subtitle = "As the distance increases, xG decreases (using loess method)",
+       subtitle = "As the distance increases, xG decreases (using lm method)",
        caption = "made by Kovács Ádám, Nguyen Nam Son",
        x = "Distance to Goal (yards)",
        y = "xG",
        color = "Team") +
   scale_color_manual(values=c("red", "blue"), labels = c("Barcelona", "Manchester United")) +
   theme_classic() +
-  theme(legend.position = c(0.8, 0.7))
+  theme(legend.position = c(0.8, 0.7)) +
+  geom_text(x=10, y=0, label = paste("R Squared =", round(summary(reg)$r.squared,2)), size = 5)
 
 # Progressive plays -------------------------------------------------------
 
@@ -899,6 +910,7 @@ ggplot() +
 radarvs <- rbind(radar2, radarmu2)
 radarvs2 <- melt(radarvs, id.vars = "player.name")
 barvsrm <- radarvs2[(radarvs2$player.name %in% c("Wayne Rooney", "Lionel Messi") & radarvs2$variable %in% c("n.x", "forward", "n.y", "n.x.x", "n.y.y")),]
+barvsrm$value <- ifelse(is.na(barvsrm$value), 0, barvsrm$value)
 
 ggplot(barvsrm, aes(variable, value, fill = player.name)) +
   geom_bar(stat = "identity", position = "dodge") +
@@ -911,7 +923,8 @@ ggplot(barvsrm, aes(variable, value, fill = player.name)) +
   scale_x_discrete(labels = c("No. Pass", "No. Forward Pass", "No. Shots", "No. Dribbles", "No.Fouls Won")) +
   theme_classic() +
   geom_label(aes(label = value), vjust = 0.5, position = position_dodge(0.9), color = "black", fontface = "bold", size = 4, show.legend = FALSE) +
-  theme(legend.position = c(0.8, 0.7))
+  theme(legend.position = c(0.8, 0.7)) +
+  coord_flip()
 
 # Radar comparison ------------------------------------
 
