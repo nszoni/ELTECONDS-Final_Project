@@ -603,7 +603,7 @@ b <- createPitch(
   geom_label(data = forpassmap2, aes(x = avg_position_x.x, y = avg_position_y.x, label=player.name),hjust=0, vjust=0, size = 3.5) +sc + labs(
     title = "Barcelona pass network", 
     subtitle = 'vs Manchester United',
-    caption = "made by ?d?m J?zsef Kov?cs and Nguyen Nam Son"
+    caption = "made by Ádám József Kovács and Nguyen Nam Son"
   )+
   theme(plot.title = element_text(size=32),
         plot.subtitle = element_text(size=20)) +
@@ -754,7 +754,7 @@ xg_timelineplot <- df_clean %>%
   scale_y_continuous(limits = c(-0.005, 0.005),
                      expand = c(0, 0)) +
   scale_size(range = c(2, 6)) +
-  labs(caption =  "made by ?d?m J?zsef Kov?cs and Nguyen Nam Son") +
+  labs(caption =  "made by Ádám József Kovács and Nguyen Nam Son") +
   theme_minimal() +
   theme(legend.position = "none",
         strip.text = element_text(size = 16, 
@@ -917,15 +917,18 @@ barvsrm$player.name <- factor(barvsrm$player.name, levels = c("Wayne Rooney", "L
 ggplot(barvsrm, aes(reorder(variable, value), value, fill = player.name)) +
   geom_bar(stat = "identity", position = "dodge") +
   scale_fill_manual(values = c("blue", "red"), labels = c("Wayne Rooney", "Lionel Messi")) +
-  labs(title = "Comparison of Messi's and Rooney's performance in the UCL Final",
-       subtitle = "Messi performs better in every aspects of the game",
+  labs(title = "Comparison of <span style='color:red'>Messi's</span> and
+       <span style='color:blue'>Rooney's</span> performance in the UCL Final",
+       subtitle = "<span style='color:red'>Messi</span> performs better in every aspects of the game",
        x = "Metrics",
        y = "Count",
        fill = "Player") +
   scale_x_discrete(labels = c("No. Pass", "No. Forward Pass", "No. Shots", "No. Dribbles", "No.Fouls Won")) +
   theme_classic() +
   geom_label(aes(label = value), vjust = 0.5, position = position_dodge(0.9), color = "white", fontface = "bold", size = 4, show.legend = FALSE) +
-  theme(legend.position = c(0.8, 0.7)) +
+  theme(plot.title = element_markdown(lineheight = 1.1),
+        plot.subtitle = element_markdown(lineheight = 1.1),
+        legend.position = "none") +
   coord_flip() 
 
 # Radar comparison ------------------------------------
