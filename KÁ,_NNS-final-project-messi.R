@@ -23,8 +23,10 @@ matches <- FreeMatches(FreeCompetitions())
 
 df <- get.matchFree(subset(matches, match_id == 18236))
 
-wd <- file.path("~", "ELTECONDS-Final_Project")
-setwd(wd)
+#wd <- file.path("~", "ELTECONDS-Final_Project")
+#setwd(wd)
+
+setwd("C:\\ELTECON//ELTECONDS-Final_Project")
 
 # EDA ---------------------------------------------------------------------
 
@@ -55,7 +57,7 @@ df_clean <- df %>%
     player.name == "Paul Scholes" ~ "Paul Scholes",
     player.name == "Javier Hernández Balcázar" ~ "Chicharito",
     player.name == "Ryan Giggs" ~ "Ryan Giggs",
-    player.name == "Nemanja Vidiæ" ~ "Nemanja Vidiæ",
+    player.name == "Nemanja Vidić" ~ "Nemanja Vidic",
     player.name == "Fábio Pereira da Silva" ~ "Fábio",
     player.name == "Wayne Mark Rooney" ~ "Wayne Rooney",
     player.name == "Luis Antonio Valencia Mosquera" ~ "Valencia",
@@ -84,7 +86,7 @@ df_clean <- df_clean %>%
     pass.recipient.name == "Paul Scholes" ~ "Paul Scholes",
     pass.recipient.name == "Javier Hernández Balcázar" ~ "Chicharito",
     pass.recipient.name == "Ryan Giggs" ~ "Ryan Giggs",
-    pass.recipient.name == "Nemanja Vidiæ" ~ "Nemanja Vidiæ",
+    pass.recipient.name == "Nemanja Vidić" ~ "Nemanja Vidic",
     pass.recipient.name == "Fábio Pereira da Silva" ~ "Fábio",
     pass.recipient.name == "Wayne Mark Rooney" ~ "Wayne Rooney",
     pass.recipient.name == "Luis Antonio Valencia Mosquera" ~ "Valencia",
@@ -300,7 +302,7 @@ ggplot(shots2, aes(x =reorder(newnames, value), y = value, fill=factor(variable,
         legend.title=element_blank(),
         legend.text = element_text(size=14),
         legend.position = "bottom") +
-  scale_fill_manual(values = c("#800026", "#e31a1c","#fd8d3c", "#fed976")) +
+  scale_fill_manual(values = c("#800026", "#e31a1c","#fd8d3c", "#fed976"), labels = c( "Goal","Saved", "Blocked", "Off target")) +
   coord_flip()+ 
   guides(fill = guide_legend(reverse = TRUE))
 
@@ -591,7 +593,6 @@ passNetwork <- function(teamname)
 
 passNetwork("Barcelona")
 
-
 b <- createPitch(
   "#ffffff", "#A9A9A9", "#ffffff", "#000000", BasicFeatures=FALSE
 )  +
@@ -604,10 +605,22 @@ b <- createPitch(
     title = "Barcelona pass network", 
     subtitle = 'vs Manchester United',
     caption = "made by Ádám József Kovács and Nguyen Nam Son"
-  )+
+  ) +
   theme(plot.title = element_text(size=32),
         plot.subtitle = element_text(size=20)) +
-  draw_image(".\\plots\\barca.png",  x = 20, y = 65, scale = 30)
+  draw_image(".\\plots\\barca.png",  x = 20, y = 65, scale = 30) + 
+  geom_text(
+    aes(x = 2, y=10,label = paste("All passes completed:", sum(forpassmap2$weight))), hjust=0, vjust=0.5, size = 6, colour = "red"
+  )+ 
+  geom_text(
+    aes(x = 2, y=6,label = paste("Combination with the most passes:", 
+                                  forpassmap2['player.name'][forpassmap2['weight'] == max(forpassmap2['weight'])][2], 
+                                  '-', 
+                                  forpassmap2['pass.recipient.name'][forpassmap2['weight'] == max(forpassmap2['weight'])][2],
+                                  '(', 
+                                  max(forpassmap2['weight']),
+                                  ')')), hjust=0, vjust=0.5, size = 4.5, colour = 'black'
+  )
 
 b
 
@@ -630,7 +643,20 @@ m <- createPitch(
   )+
   theme(plot.title = element_text(size=32),
         plot.subtitle = element_text(size=20)) +
-  draw_image(".\\plots\\mun.png",  x = 20, y = 65, scale = 30)
+  draw_image(".\\plots\\mun.png",  x = 20, y = 65, scale = 30)+ 
+  geom_text(
+    aes(x = 2, y=14,label = paste("All passes completed:", sum(forpassmap2$weight))), hjust=0, vjust=0.5, size = 6, colour = "red"
+  )+ 
+  geom_text(
+    aes(x = 2, y=10,label = paste("Combination with the most passes:", 
+                                  forpassmap2['player.name'][forpassmap2['weight'] == max(forpassmap2['weight'])], 
+                                  '-', 
+                                  forpassmap2['pass.recipient.name'][forpassmap2['weight'] == max(forpassmap2['weight'])], 
+                                  '(', 
+                                  max(forpassmap2['weight']),
+                                  ')')), hjust=0, vjust=0.5, size = 4.5, colour = 'black'
+    )
+
 
 m
 
@@ -819,7 +845,7 @@ chart<-chart %>%
 ggplot(chart, aes(x =reorder(player.name, value), y = value, fill=fct_rev(variable))) +
   geom_bar(stat="identity", colour="white")+
   labs(title = "Expected Goal Contribution", subtitle = "UCL Final 2011-12",
-       x="", y="Per 90",caption ="nNPxG = Value of shots taken (no penalties)\nxG assisted = Value of shots assisted")+
+       x="", y="Per 90",caption ="nNPxG = Value of shots taken (no penalties)\nxGA = Value of passes in terms of xG")+
   theme(axis.text.y = element_text(size=14),
         axis.title = element_text(size=14),
         axis.text.x = element_text(size=14),
@@ -901,7 +927,16 @@ ggplot() +
   guides(fill = guide_colourbar(title.position = "top"), 
          shape = guide_legend(override.aes = list(size = 7, fill = "black"))) +
   coord_flip(xlim = c(85, 125)) +
-  geom_text(aes(x=95, label="GOAL", y=38), colour="red", text=element_text(size=11), fontface = "bold")
+  geom_text(aes(x=95, label="GOAL", y=38), colour="red", text=element_text(size=11), fontface = "bold")+ 
+  geom_text(
+    aes(x = 94, y=2,label = paste("Overall XG produced:", round(sum(shots['shot.statsbomb_xg']),2))), hjust=0, vjust=0.5, size = 4.5, colour = "black"
+  )+ 
+  geom_text(
+    aes(x = 90, y=2,label = paste("Actual goals scored:", sum(shots['shot.outcome.name'] == 'Goal'))), hjust=0, vjust=0.5, size = 4.5, colour = "red"
+  )+ 
+  geom_text(
+    aes(x = 86, y=2,label = paste("Difference from XG:", abs(round(sum(shots['shot.statsbomb_xg']),2) - sum(shots['shot.outcome.name'] == 'Goal')))), hjust=0, vjust=0.5, size = 4.5, colour = "black"
+  )
 
 # Comparisons of Messi and Rooney -----------------------------------------
 
