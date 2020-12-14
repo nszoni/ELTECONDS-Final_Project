@@ -255,6 +255,50 @@ ggplot(passes2, aes(x =reorder(newnames, value), y = value, fill=fct_rev(variabl
 
 passes <- passes[, !names(passes) == "newnames"]
 
+# Bootstrapping -----------------------------------------------------------
+
+passesb <- barca %>% filter(type.name == 'Pass' & player.name != is.na(player.name) & pass.outcome.name %in% c('Incomplete', 'Complete', 'Out'))
+passesb <- passesb[c("player.name", "pass.outcome.name")]
+passesb$pass.outcome.name <- ifelse(passesb$pass.outcome.name == "Complete", 1, 0)
+
+df <- data.frame()
+
+bootStrap <- function(plyr){
+  
+  messiboot <- passesb$pass.outcome.name[passesb$player.name == plyr]
+  
+  B = 10000
+  sample_size <- length(messiboot)
+  bs_sample_means <- data.table(
+    sample_id = integer(), bs_sample_mean = numeric()
+  )
+  set.seed(1021)
+  for (i in 1:B) {
+    bs_sample = sample(messiboot, sample_size, replace = TRUE)
+    bs_sample_means <- rbind(
+      bs_sample_means,
+      data.table(sample_id = i, bs_sample_mean = mean(bs_sample))
+    )
+  }
+  
+  df <<- rbind(df, data.frame(player = plyr, mean = mean(bs_sample_means$bs_sample_mean), CI_low = quantile(bs_sample_means$bs_sample_mean, 0.025), CI_high = quantile(bs_sample_means$bs_sample_mean, 0.975)))
+  
+}
+
+bootStrap("Lionel Messi")
+bootStrap("David Villa")
+bootStrap("Pedro")
+
+ggplot(data = df, aes(x = player, y = mean)) +
+  geom_col() +
+  geom_errorbar(aes(ymin = CI_low, ymax = CI_high)) +
+  theme_classic() +
+  geom_label(aes(label = percent(mean)), vjust = 6, position = position_dodge(0.9), color = "black", fontface = "bold", size =
+               4, show.legend = FALSE) +
+  labs(title = "Pass Success Rate with Bootstrapping", subtitle = "on Barcelona's Front Trio", caption = "Made by Á.Kovács and S.N.Nguyen", x = NULL, y = "Success rate") +
+  scale_y_continuous(labels = scales::percent)
+
+
 #create datasets specifically for statistics about shots
 
 shotsmu <- mun %>% filter(type.name == 'Shot' & player.name != is.na(player.name)) %>%
@@ -1111,6 +1155,8 @@ p2b <- ballCarry("Wayne Rooney", "Barcelona", "Wayne-Rooney.png", "bottom")
 comp2 <- p2 + p2b
 
 comp2
+
+
 ######################
 #     END OF CODE    #
 ######################
